@@ -183,3 +183,8 @@ void puzzleSetUp() {
 									0,0,0,	0,0,0,	0,0,9   //row9
 							};
 }
+int main() {
+	//runing program
+	 run();
+}
+			   
