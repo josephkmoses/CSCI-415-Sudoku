@@ -46,7 +46,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
         }
 
         //skip cells that are already filled
-        if(puzzle[row + col * 9] != 0)
+        if(puzzle[row * 9 + col] != 0)
         {
                 return solve(row, col, puzzle, counter+1, startValue);
         }
@@ -63,7 +63,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
                 //check if the value is allowed
                 if(valueAllowedCheck(row, col, startValue, puzzle))
                 {
-                        puzzle[row + col * 9] = startValue; //record if it is
+                        puzzle[row * 9 + col] = startValue; //record if it is
 
                         if(solve(row, col, puzzle, counter+1, startValue)) //solve the next cell
                         {
@@ -71,7 +71,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
                         }
                 }
         }
-        puzzle[row + col *9] = 0; //set to zero if backtracking
+        puzzle[row * 9 + col] = 0; //set to zero if backtracking
         return false;
 	}
 	bool valueAllowedCheck(int row, int col, int value, int* puzzle)
