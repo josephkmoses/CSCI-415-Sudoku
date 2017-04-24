@@ -18,14 +18,21 @@ bool solve(int row, int col, int* puzzle, int counter, int startValue);
 bool valueAllowedCheck(int row, int col, int value, int* puzzle);
 
 
-__global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
+__global__ void parallelSudoku(int* puzzle, volatile bool* finished, char* result)
 {
 	int i = threadIdx.x;	//the thread id
 	int j = threadIdx.y;
     int startVal = (blockIdx.x * blockDim.x + threadIdx.x) % 9 +1; //Starting value (1-9) N
-
-	bool solve(int row, int col, int* puzzle, int counter, int startValue)
+	
+	int puzzleArray [81];
+	
+	for(int i =0; i < 81; i++)
 	{
+		puzzleArray[i] = puzzle[i];
+	}
+
+	bool solve(int row, int col, int puzzle, int counter, int startValue, bool* finished)
+	{		
         if(counter == 81) //every cell has been visted
         {
                 return true;
@@ -74,7 +81,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
         puzzle[row * 9 + col] = 0; //set to zero if backtracking
         return false;
 	}
-	bool valueAllowedCheck(int row, int col, int value, int* puzzle)
+	bool valueAllowedCheck(int row, int col, int value, int puzzle)
 	{
 			int i; //loop vairable
 
@@ -98,11 +105,14 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 	}
 	
 
-	if(solve(i,j,puzzle,0,startVal)) 
+	if(solve(i,j,puzzleArray,0,startVal, finished)) 
 	{
-		//the puzzle was solved
-		result = "solved";
-		finished = true;
+		if(!finished)
+		{
+			//the puzzle was solved
+			result = "solved";
+			finished = true;
+		}
 	}
 	else
 	{
@@ -245,7 +255,10 @@ int main() {
 
 	//host variables
 	bool* h_finished = (bool*)malloc(sizeof(bool));
+	bool tempF = false;
+	h_finished = tempF;
 	char* h_result = (char*)malloc(10*sizeof(char));
+	
 	
 	int* d_puzzle;
 	bool* d_finished;
@@ -258,5 +271,11 @@ int main() {
 	cudaMemcpy(d_puzzle, easyPuzzle, 81*sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(d_finished, h_finished, sizeof(bool), cudaMemcpyHostToDevice);
 	cudaMemcpy(d_result, h_result, 10*sizeof(char), cudaMemcpyHostToDevice);
+	
+	dim threadsPerBlock(9,9);
+	
+	parallelSudoku<<<1 , threadsPerBlock>>>(int* d_puzzle, volatile bool* d_finished, char* d_result);
+	
+	
 	
 }
