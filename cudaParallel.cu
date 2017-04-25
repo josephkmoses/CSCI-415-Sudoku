@@ -36,7 +36,7 @@ __device__ bool solve(int row, int col, int puzzle, int counter, int startValue,
 	//skip cells that are already filled
 	if(puzzle[row * 9 + col] != 0)
 	{
-			return solve(row, col, puzzle, counter+1, startValue);
+			return solve(row, col, puzzle, counter+1, startValue, finished);
 	}
 
 	//if the cell is empty
@@ -53,7 +53,7 @@ __device__ bool solve(int row, int col, int puzzle, int counter, int startValue,
 			{
 					puzzle[row * 9 + col] = startValue; //record if it is
 
-					if(solve(row, col, puzzle, counter+1, startValue)) //solve the next cell
+					if(solve(row, col, puzzle, counter+1, startValue, finished)) //solve the next cell
 					{
 							return true;
 					}
@@ -63,7 +63,7 @@ __device__ bool solve(int row, int col, int puzzle, int counter, int startValue,
 	return false;
 }
 
-__device__ bool valueAllowedCheck(int row, int col, int value, int puzzle)
+__device__ bool valueAllowedCheck(int row, int col, int value, int* puzzle)
 {
 		int i; //loop vairable
 
@@ -92,7 +92,9 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 	int j = threadIdx.y;
     int startVal = (blockIdx.x * blockDim.x + threadIdx.x) % 9 +1; //Starting value (1-9) N
 	
-	int puzzleArray [81];
+	bool finishedTemp;
+	
+	int* puzzleArray [81];
 	
 	for(int i =0; i < 81; i++)
 	{
@@ -111,7 +113,8 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 				puzzle[i] = puzzleArray[i];
 			}
 			
-			finished = true;
+			finishedTemp = true;
+			finished = finishedTemp;
 		}
 	}
 	else
@@ -119,7 +122,8 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 		if(!finished)//none of the threads have finished the puzzle
 		{
 			result = "unsolved";
-			finished = false;
+			finishedTemp = false;
+			finished = finishedTemp;
 		}
 	}
 
