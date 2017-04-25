@@ -35,7 +35,7 @@ __device__ bool valueAllowedCheck(int row, int col, int value, int* puzzle)
 		return true; //the value works
 }
 
-__device__ bool solve(int row, int col, int puzzle, int counter, int startValue, bool* finished)
+__device__ bool solve(int row, int col, int* puzzle, int counter, int startValue, bool* finished)
 {		
 	if(counter == 81) //every cell has been visted
 	{
