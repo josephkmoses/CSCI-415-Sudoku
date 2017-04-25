@@ -36,7 +36,7 @@ bool solve(int row, int col, int* puzzle, int counter, int startValue)
         }
 
         //skip cells that are already filled
-        if(puzzle[row + col * 9] != 0)
+        if(puzzle[row * 9 + col] != 0)
         {
                 return solve(row, col, puzzle, counter+1, startValue);
         }
@@ -53,7 +53,7 @@ bool solve(int row, int col, int* puzzle, int counter, int startValue)
                 //check if the value is allowed
                 if(valueAllowedCheck(row, col, startValue, puzzle))
                 {
-                        puzzle[row + col * 9] = startValue; //record if it is
+                        puzzle[row *9 + col] = startValue; //record if it is
 
                         if(solve(row, col, puzzle, counter+1, startValue)) //solve the next cell
                         {
@@ -61,7 +61,7 @@ bool solve(int row, int col, int* puzzle, int counter, int startValue)
                         }
                 }
         }
-        puzzle[row + col *9] = 0; //set to zero if backtracking
+        puzzle[row * 9 + col] = 0; //set to zero if backtracking
         return false;
 }
 bool valueAllowedCheck(int row, int col, int value, int* puzzle)
@@ -113,6 +113,28 @@ void run (int* puzzle) {
 
 }
 
+void printPuzzle (int* puzzle ) {
+    int i;
+    int count =0;
+    int mod;
+
+    for(i =0; i< 81; i++) {
+      mod =count % 3;
+      if(count > 8){
+        count =0;
+        cout << "\n";
+      }
+      else if (mod ==0)
+      {
+        cout << "  ";
+      }
+        count ++;
+        cout << puzzle[i];
+        cout << " ";
+    }
+
+}
+
 int main() {
       //clear easy puzzle
           int* easyPuzzle = (int*)malloc(81*sizeof(int));
@@ -120,9 +142,9 @@ int main() {
                               8,0,0,  1,7,0,  9,5,2,  //row 2
                               0,2,5,  0,4,6,  3,0,0,    //row 3
 
-                              0,0,0,  0,0,2,  0,0,0,   //row 4
+                              7,0,0,  0,0,2,  0,0,5,   //row 4
                               0,0,4,  0,9,0,  2,0,0,   //row 5
-                              0,0,0,  3,0,0,  0,0,0,    //row 6
+                              0,8,0,  3,0,0,  0,0,0,    //row 6
 
                               0,0,8,  5,3,0,  6,1,0,    //row 7
                               3,5,1,  0,8,4,  0,0,9,    //row 8
@@ -193,5 +215,6 @@ int main() {
     evilPuzzle[i] = inputEvil[i];
     unsolveable[i] = inputUnsolve[i];
     }
-         run(hardPuzzle);
+         run(easyPuzzle);
+         printPuzzle(easyPuzzle);
 }
