@@ -26,7 +26,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 		puzzleArray[i] = puzzle[i];
 	}
 
-	bool solve(int row, int col, int puzzle, int counter, int startValue, bool* finished)
+	__device__ bool solve(int row, int col, int puzzle, int counter, int startValue, bool* finished)
 	{		
         if(counter == 81) //every cell has been visted
         {
@@ -77,7 +77,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
         return false;
 	}
 	
-	bool valueAllowedCheck(int row, int col, int value, int puzzle)
+	__device__ bool valueAllowedCheck(int row, int col, int value, int puzzle)
 	{
 			int i; //loop vairable
 
