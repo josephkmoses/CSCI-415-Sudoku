@@ -12,6 +12,29 @@
 
 using namespace std;
 
+__device__ bool valueAllowedCheck(int row, int col, int value, int* puzzle)
+{
+		int i; //loop vairable
+
+		for(i = 0; i < 9; i++)
+		{
+				if(puzzle[row * 9 + i] == value) //check cells in the row
+				{
+						return false;
+				}
+				else if(puzzle[col + i * 9] == value) //check cells in the column
+				{
+						return false;
+				}
+				else if(puzzle[(row/3*3+i%3) * 9 + (col/3*3+i/3) ] == value) //check the subsquare
+				{
+						return false;
+				}
+		}
+
+		return true; //the value works
+}
+
 __device__ bool solve(int row, int col, int puzzle, int counter, int startValue, bool* finished)
 {		
 	if(counter == 81) //every cell has been visted
@@ -63,28 +86,7 @@ __device__ bool solve(int row, int col, int puzzle, int counter, int startValue,
 	return false;
 }
 
-__device__ bool valueAllowedCheck(int row, int col, int value, int* puzzle)
-{
-		int i; //loop vairable
 
-		for(i = 0; i < 9; i++)
-		{
-				if(puzzle[row * 9 + i] == value) //check cells in the row
-				{
-						return false;
-				}
-				else if(puzzle[col + i * 9] == value) //check cells in the column
-				{
-						return false;
-				}
-				else if(puzzle[(row/3*3+i%3) * 9 + (col/3*3+i/3) ] == value) //check the subsquare
-				{
-						return false;
-				}
-		}
-
-		return true; //the value works
-}
 	
 __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 {
