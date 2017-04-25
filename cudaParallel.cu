@@ -13,11 +13,6 @@
 using namespace std;
 
 
-
-bool solve(int row, int col, int* puzzle, int counter, int startValue);
-bool valueAllowedCheck(int row, int col, int value, int* puzzle);
-void printPuzzle (int* puzzle ) ;
-
 __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 {
 	int i = threadIdx.x;	//the thread id
@@ -81,6 +76,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
         puzzle[row * 9 + col] = 0; //set to zero if backtracking
         return false;
 	}
+	
 	bool valueAllowedCheck(int row, int col, int value, int puzzle)
 	{
 			int i; //loop vairable
