@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <cstdio>
 #include <math.h>
-#include <time.h>
+#include <sys/time.h>
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -314,7 +314,7 @@ int main() {
 	cudaMemcpy(d_result, h_result, 10*sizeof(char), cudaMemcpyHostToDevice);
 	checkErrors("cudaMemcpy3");
 	
-	dim threadsPerBlock(9,9);
+	dim3 threadsPerBlock(9,9);
 	
 	parallelSudoku<<<1 , threadsPerBlock>>>(int* d_puzzle, bool* d_finished, char* d_result);
 	checkErrors("kernel error");
