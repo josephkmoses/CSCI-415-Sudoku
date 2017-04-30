@@ -96,7 +96,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 	
 	bool finishedTemp;
 	
-	int* puzzleArray [81];
+	int puzzleArray [81];
 	
 	for(int i =0; i < 81; i++)
 	{
