@@ -107,7 +107,6 @@ __global__ void parallelSudoku(int* puzzle, bool* finished)
 	{
 		if(!finished)//none of the threads have finished the puzzle
 		{
-			cout << "Thread " << blockIdx.x * blockDim.x + threadIdx.x << " solved the puzzle.\n";
 			for(int i =0; i < 81; i++)
 			{
 				puzzle[i] = puzzleArray[i];
