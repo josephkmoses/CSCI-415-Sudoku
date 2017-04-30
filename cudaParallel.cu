@@ -296,7 +296,7 @@ int main() {
 	cudaMalloc((void**) &d_finished, sizeof(bool));
 	checkErrors("cudaMalloc2");
 	
-	cudaMemcpy(d_puzzle, easyPuzzle, 81*sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_puzzle, unsolveable, 81*sizeof(int), cudaMemcpyHostToDevice);
 	checkErrors("cudaMemcpy1");
 	cudaMemcpy(d_finished, h_finished, sizeof(bool), cudaMemcpyHostToDevice);
 	checkErrors("cudaMemcpy2");
