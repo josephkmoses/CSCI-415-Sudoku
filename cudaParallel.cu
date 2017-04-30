@@ -116,7 +116,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 			}
 			
 			finishedTemp = true;
-			finished = finishedTemp;
+			finished = true;
 		}
 	}
 	else
@@ -125,7 +125,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 		{
 			result = "unsolved";
 			finishedTemp = false;
-			finished = finishedTemp;
+			finished = false;
 		}
 	}
 
@@ -285,7 +285,6 @@ int main() {
 	
 	//host variables
 	bool* h_finished = (bool*)malloc(sizeof(bool));
-	bool tempF = false;
 	h_finished = false;
 	char* h_result = (char*)malloc(10*sizeof(char));
 	char[10] tempR = "          ";
