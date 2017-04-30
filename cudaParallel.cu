@@ -94,7 +94,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 	int j = threadIdx.y;
     int startVal = (blockIdx.x * blockDim.x + threadIdx.x) % 9 +1; //Starting value (1-9) N
 	
-	bool finishedTemp;
+	bool *finishedTemp;
 	
 	int puzzleArray [81];
 	
@@ -286,7 +286,7 @@ int main() {
 	//host variables
 	bool* h_finished = (bool*)malloc(sizeof(bool));
 	bool tempF = false;
-	h_finished = tempF;
+	h_finished = false;
 	char* h_result = (char*)malloc(10*sizeof(char));
 	char[10] tempR = "          ";
 	h_result = tempR;
