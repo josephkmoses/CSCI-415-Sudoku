@@ -88,7 +88,7 @@ __device__ bool solve(int row, int col, int* puzzle, int counter, int startValue
 
 
 	
-__global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
+__global__ void parallelSudoku(int* puzzle, bool* finished)
 {
 	int i = threadIdx.x;	//the thread id
 	int j = threadIdx.y;
@@ -107,9 +107,6 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 	{
 		if(!finished)//none of the threads have finished the puzzle
 		{
-			//the puzzle was solved
-			result = "solved";
-			
 			for(int i =0; i < 81; i++)
 			{
 				puzzle[i] = puzzleArray[i];
@@ -123,7 +120,6 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 	{
 		if(!finished)//none of the threads have finished the puzzle
 		{
-			result = "unsolved";
 			finishedTemp = false;
 			finished = &finishedTemp;
 		}
@@ -287,32 +283,24 @@ int main() {
 	bool* h_finished = (bool*)malloc(sizeof(bool));
 	bool tempF = false;
 	h_finished = &tempF;
-	char* h_result = (char*)malloc(10*sizeof(char));
-	char[] tempR = "          ";
-	h_result = &tempR;
 	int* h_puzzle = (int*)malloc(81*sizeof(int));
 	int[81] tempP = {};
 	h_puzzle = &tempP;
 	
 	int* d_puzzle;
 	bool* d_finished;
-	char* d_result;
-	
+
 	long long Total_GPU_start_time = start_timer();
 	
 	cudaMalloc((void**) &d_puzzle, 81*sizeof(int));
 	checkErrors("cudaMalloc1");
 	cudaMalloc((void**) &d_finished, sizeof(bool));
 	checkErrors("cudaMalloc2");
-	cudaMalloc((void**) &d_result, 10*sizeof(char));
-	checkErrors("cudaMalloc3");
 	
 	cudaMemcpy(d_puzzle, easyPuzzle, 81*sizeof(int), cudaMemcpyHostToDevice);
 	checkErrors("cudaMemcpy1");
 	cudaMemcpy(d_finished, h_finished, sizeof(bool), cudaMemcpyHostToDevice);
 	checkErrors("cudaMemcpy2");
-	cudaMemcpy(d_result, h_result, 10*sizeof(char), cudaMemcpyHostToDevice);
-	checkErrors("cudaMemcpy3");
 	
 	dim3 threadsPerBlock(9,9);
 	
@@ -320,12 +308,21 @@ int main() {
 	checkErrors("kernel error");
 	cudaDeviceSynchronize();
 	
-	cudaMemcpy(h_result, d_result, 10*sizeof(char), cudaMemcpyDeviceToHost);
-	checkErrors("cudaMemcpy4");
+	cudaMemcpy(h_finished, d_finished, sizeof(bool), cudaMemcpyDeviceToHost);
+	checkErrors("cudaMemcpy3");
 	cudaMemcpy(h_puzzle, d_puzzle, 81*sizeof(int), cudaMemcpyDeviceToHost);
-	checkErrors("cudaMemcpy5");
+	checkErrors("cudaMemcpy4");
 	
 	long long GPU_total_run_time = stop_timer(Total_GPU_start_time, "\nGPU Total Run Time");
+	
+	if(h_finished)
+	{
+		cout << "Solved\n";
+	}
+	else
+	{
+		cout << "Unsolved\n;
+	}
 	
 	printPuzzle(h_puzzle); 
 	
