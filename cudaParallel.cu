@@ -133,12 +133,12 @@ void printPuzzle (int* puzzle ) {
     int mod;
 
     for(i =0; i< 81; i++) {
-      mod =count % 3;
+      mod = count % 3;
       if(count > 8){
         count =0;
         cout << "\n";
       }
-      else if (mod ==0)
+      else if (mod == 0)
       {
         cout << "  ";
       }
@@ -147,6 +147,7 @@ void printPuzzle (int* puzzle ) {
         cout << " ";
     }
 
+	cout << "\n";
 }
 
 // Copied from assignment 1
