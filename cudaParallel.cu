@@ -288,7 +288,7 @@ int main() {
 	bool tempF = false;
 	h_finished = &tempF;
 	char* h_result = (char*)malloc(10*sizeof(char));
-	char[10] tempR = {};
+	char[] tempR = "          ";
 	h_result = &tempR;
 	int* h_puzzle = (int*)malloc(81*sizeof(int));
 	int[81] tempP = {};
