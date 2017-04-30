@@ -321,7 +321,7 @@ int main() {
 	}
 	else
 	{
-		cout << "Unsolved\n;
+		cout << "Unsolved\n";
 	}
 	
 	printPuzzle(h_puzzle); 
