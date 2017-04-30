@@ -94,7 +94,6 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 	int j = threadIdx.y;
     int startVal = (blockIdx.x * blockDim.x + threadIdx.x) % 9 +1; //Starting value (1-9) N
 	
-	bool *finishedTemp;
 	
 	int puzzleArray [81];
 	
@@ -115,7 +114,6 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 				puzzle[i] = puzzleArray[i];
 			}
 			
-			finishedTemp = true;
 			finished = true;
 		}
 	}
@@ -124,7 +122,6 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, char* result)
 		if(!finished)//none of the threads have finished the puzzle
 		{
 			result = "unsolved";
-			finishedTemp = false;
 			finished = false;
 		}
 	}
