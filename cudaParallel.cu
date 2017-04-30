@@ -284,7 +284,7 @@ int main() {
 	bool tempF = false;
 	h_finished = &tempF;
 	int* h_puzzle = (int*)malloc(81*sizeof(int));
-	int[81] tempP = {};
+	int tempP[81] = {};
 	h_puzzle = &tempP;
 	
 	int* d_puzzle;
@@ -304,7 +304,7 @@ int main() {
 	
 	dim3 threadsPerBlock(9,9);
 	
-	parallelSudoku<<<1 , threadsPerBlock>>>(d_puzzle, d_finished, d_result);
+	parallelSudoku<<<1 , threadsPerBlock>>>(d_puzzle, d_finished);
 	checkErrors("kernel error");
 	cudaDeviceSynchronize();
 	
