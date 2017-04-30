@@ -284,7 +284,7 @@ int main() {
 	bool tempF = false;
 	h_finished = &tempF;
 	int* h_puzzle = (int*)malloc(81*sizeof(int));
-	int tempP[81] = {};
+	int tempP[81] = { };
 	h_puzzle = &tempP;
 	
 	int* d_puzzle;
