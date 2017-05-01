@@ -106,7 +106,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 
 	if(solve(i,j,puzzleArray,0,startVal, finished)) 
 	{
-		if(!finished)//none of the threads have finished the puzzle
+		if(!*finished)//none of the threads have finished the puzzle
 		{
 			finishedTemp = true;
 			finished = &finishedTemp;
@@ -122,7 +122,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 	}
 	else
 	{
-		if(!finished)//none of the threads have finished the puzzle
+		if(!*finished)//none of the threads have finished the puzzle
 		{
 			finishedTemp = false;
 			finished = &finishedTemp;
