@@ -41,7 +41,7 @@ __device__ bool solve(int row, int col, int* puzzle, int counter, int startValue
 	{
 			return true;
 	}
-	if(finished)
+	if(*finished)
 	{
 			return true;
 	}
