@@ -313,7 +313,7 @@ int main() {
 	cudaMemcpy(d_result, h_result, sizeof(int), cudaMemcpyHostToDevice);
 	checkErrors("cudaMemcpy3");
 	
-	size_t stackSize = 512000;
+	size_t stackSize = 5120000;
 	cudaDeviceSetLimit(cudaLimitStackSize, stackSize);
 	
 	dim3 threadsPerBlock(9,9);
