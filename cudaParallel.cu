@@ -326,7 +326,7 @@ int main() {
 	
 	long long GPU_total_run_time = stop_timer(Total_GPU_start_time, "\nGPU Total Run Time");
 	
-	if(h_result == 1)
+	if(*h_result == 1)
 	{
 		cout << "Solved\n";
 	}
