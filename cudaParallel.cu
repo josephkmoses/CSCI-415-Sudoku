@@ -318,7 +318,7 @@ int main() {
 	
 	dim3 threadsPerBlock(9,9);
 	
-	parallelSudoku<<<1 , threadsPerBlock>>>(d_puzzle, d_finished, d_result);
+	parallelSudoku<<<1 , 1>>>(d_puzzle, d_finished, d_result);
 	checkErrors("kernel error");
 	cudaDeviceSynchronize();
 	
