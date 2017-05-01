@@ -117,7 +117,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 			}
 			
 			resultTemp = 1;
-			result = &resultTemp;
+			(*result) = resultTemp;
 		}
 	}
 	else
