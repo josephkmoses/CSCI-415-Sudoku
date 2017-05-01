@@ -316,6 +316,8 @@ int main() {
 	size_t stackSize = 207630;
 	cudaDeviceSetLimit(cudaLimitStackSize, stackSize);
 	
+	checkErrors("stack size");
+	
 	dim3 threadsPerBlock(9,9);
 	
 	parallelSudoku<<<1 , 1>>>(d_puzzle, d_finished, d_result);
