@@ -320,7 +320,7 @@ int main() {
 	
 	dim3 threadsPerBlock(9,9);
 	
-	parallelSudoku<<<1 , 1>>>(d_puzzle, d_finished, d_result);
+	parallelSudoku<<<1 , threadsPerBlock>>>(d_puzzle, d_finished, d_result);
 	checkErrors("kernel error");
 	cudaDeviceSynchronize();
 	
@@ -332,8 +332,6 @@ int main() {
 	checkErrors("cudaMemcpy6");
 	
 	long long GPU_total_run_time = stop_timer(Total_GPU_start_time, "\nGPU Total Run Time");
-	
-	cout << *h_result << endl;
 	
 	if(*h_result == 1)
 	{
