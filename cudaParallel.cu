@@ -286,6 +286,8 @@ int main() {
 	
 	//host variables
 	bool* h_finished = (bool*)malloc(sizeof(bool));
+	bool finishedTemp = false;
+	h_finished = &finishedTemp;
 	int* h_puzzle = (int*)malloc(81*sizeof(int));
 	int* h_result = (int*)malloc(sizeof(int));
 	int resultTemp = 0;
