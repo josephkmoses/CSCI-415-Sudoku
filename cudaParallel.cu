@@ -43,7 +43,7 @@ __device__ bool solve(int row, int col, int* puzzle, int counter, int startValue
 	}
 	if(finished)
 	{
-			cudaThreadExit();
+			return true;
 	}
 
 	//loop of column and rows
@@ -90,48 +90,50 @@ __device__ bool solve(int row, int col, int* puzzle, int counter, int startValue
 	
 __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 {
-	int i = threadIdx.x;	//the thread id
-	int j = threadIdx.y;
-    int startVal = (blockIdx.x * blockDim.x + threadIdx.x) % 9 +1; //Starting value (1-9) N
-	
-	__shared__ volatile bool sharedFinish;
-	
-	sharedFinish = *finished;
-	
-	int resultTemp;
-	
-	int puzzleArray [81];
-	
-	for(int i =0; i < 81; i++)
+	if(!*finished)
 	{
-		puzzleArray[i] = puzzle[i];
-	}
-
-	if(solve(i,j,puzzleArray,0,startVal, sharedFinish)) 
-	{
-		if(!sharedFinish)//none of the threads have finished the puzzle
+		int i = threadIdx.x;	//the thread id
+		int j = threadIdx.y;
+		int startVal = (blockIdx.x * blockDim.x + threadIdx.x) % 9 +1; //Starting value (1-9) N
+		
+		__shared__ volatile bool sharedFinish;
+		
+		sharedFinish = *finished;
+		
+		int resultTemp;
+		
+		int puzzleArray [81];
+		
+		for(int i =0; i < 81; i++)
 		{
-			sharedFinish = true;
-			(*finished) = sharedFinish;
-			
-			for(int i =0; i < 81; i++)
+			puzzleArray[i] = puzzle[i];
+		}
+
+		if(solve(i,j,puzzleArray,0,startVal, sharedFinish)) 
+		{
+			if(!sharedFinish)//none of the threads have finished the puzzle
 			{
-				puzzle[i] = puzzleArray[i];
+				sharedFinish = true;
+				(*finished) = sharedFinish;
+				
+				for(int i =0; i < 81; i++)
+				{
+					puzzle[i] = puzzleArray[i];
+				}
+				
+				resultTemp = 1;
+				(*result) = resultTemp;
 			}
-			
-			resultTemp = 1;
-			(*result) = resultTemp;
 		}
-	}
-	else
-	{
-		if(!sharedFinish)//none of the threads have finished the puzzle
+		else
 		{
-			sharedFinish = true;
-			(*finished) = sharedFinish;
+			if(!sharedFinish)//none of the threads have finished the puzzle
+			{
+				sharedFinish = true;
+				(*finished) = sharedFinish;
+			}
 		}
 	}
-
 }
 
 void printPuzzle (int* puzzle ) {
