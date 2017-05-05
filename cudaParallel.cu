@@ -308,7 +308,7 @@ int main() {
 	cudaMalloc((void**) &d_result, sizeof(int));
 	checkErrors("cudaMalloc3");
 	
-	cudaMemcpy(d_puzzle, hardPuzzle, 81*sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_puzzle, evilPuzzle, 81*sizeof(int), cudaMemcpyHostToDevice);
 	checkErrors("cudaMemcpy1");
 	cudaMemcpy(d_finished, h_finished, sizeof(bool), cudaMemcpyHostToDevice);
 	checkErrors("cudaMemcpy2");
@@ -322,7 +322,7 @@ int main() {
 	
 	dim3 threadsPerBlock(9,9);
 	
-	parallelSudoku<<<1 , threadsPerBlock>>>(d_puzzle, d_finished, d_result);
+	parallelSudoku<<<1 , 1>>>(d_puzzle, d_finished, d_result);
 	checkErrors("kernel error");
 	cudaDeviceSynchronize();
 	
