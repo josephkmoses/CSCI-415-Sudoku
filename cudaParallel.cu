@@ -35,7 +35,7 @@ __device__ bool valueAllowedCheck(int row, int col, int value, int* puzzle)
 		return true; //the value works
 }
 
-__device__ bool solve(int row, int col, int* puzzle, int counter, int startValue, bool* finished)
+__device__ bool solve(int row, int col, int* puzzle, int counter, int startValue, bool finished)
 {		
 	if(counter == 81) //every cell has been visted
 	{
@@ -94,7 +94,9 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 	int j = threadIdx.y;
     int startVal = (blockIdx.x * blockDim.x + threadIdx.x) % 9 +1; //Starting value (1-9) N
 	
-	__shared__ bool* sharedFinish = *finished;
+	__shared__ bool sharedFinish;
+	
+	sharedFinish = *finished;
 	
 	bool finishedTemp;
 	int resultTemp;
@@ -108,7 +110,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 
 	if(solve(i,j,puzzleArray,0,startVal, sharedFinish)) 
 	{
-		if(!*sharedFinish)//none of the threads have finished the puzzle
+		if(!sharedFinish)//none of the threads have finished the puzzle
 		{
 			finishedTemp = true;
 			finished = &finishedTemp;
@@ -124,7 +126,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 	}
 	else
 	{
-		if(!*sharedFinish)//none of the threads have finished the puzzle
+		if(!sharedFinish)//none of the threads have finished the puzzle
 		{
 			finishedTemp = false;
 			finished = &finishedTemp;
