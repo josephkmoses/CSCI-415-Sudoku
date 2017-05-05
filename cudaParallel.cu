@@ -94,6 +94,8 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 	int j = threadIdx.y;
     int startVal = (blockIdx.x * blockDim.x + threadIdx.x) % 9 +1; //Starting value (1-9) N
 	
+	__shared__ bool* sharedFinish = *finished;
+	
 	bool finishedTemp;
 	int resultTemp;
 	
@@ -104,9 +106,9 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 		puzzleArray[i] = puzzle[i];
 	}
 
-	if(solve(i,j,puzzleArray,0,startVal, finished)) 
+	if(solve(i,j,puzzleArray,0,startVal, sharedFinish)) 
 	{
-		if(!*finished)//none of the threads have finished the puzzle
+		if(!*sharedFinish)//none of the threads have finished the puzzle
 		{
 			finishedTemp = true;
 			finished = &finishedTemp;
@@ -122,7 +124,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 	}
 	else
 	{
-		if(!*finished)//none of the threads have finished the puzzle
+		if(!*sharedFinish)//none of the threads have finished the puzzle
 		{
 			finishedTemp = false;
 			finished = &finishedTemp;
