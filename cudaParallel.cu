@@ -43,7 +43,7 @@ __device__ bool solve(int row, int col, int* puzzle, int counter, int startValue
 	}
 	if(finished)
 	{
-			exit(0);
+			return true;
 	}
 
 	//loop of column and rows
@@ -94,7 +94,7 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 	int j = threadIdx.y;
     int startVal = (blockIdx.x * blockDim.x + threadIdx.x) % 9 +1; //Starting value (1-9) N
 	
-	__shared__ bool sharedFinish;
+	__shared__ volatile bool sharedFinish;
 	
 	sharedFinish = *finished;
 	
