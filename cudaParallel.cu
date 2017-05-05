@@ -98,7 +98,6 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 	
 	sharedFinish = *finished;
 	
-	bool finishedTemp;
 	int resultTemp;
 	
 	int puzzleArray [81];
@@ -112,8 +111,8 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 	{
 		if(!sharedFinish)//none of the threads have finished the puzzle
 		{
-			finishedTemp = true;
-			finished = &finishedTemp;
+			sharedFinish = true;
+			(*finished) = sharedFinish;
 			
 			for(int i =0; i < 81; i++)
 			{
@@ -128,8 +127,8 @@ __global__ void parallelSudoku(int* puzzle, bool* finished, int* result)
 	{
 		if(!sharedFinish)//none of the threads have finished the puzzle
 		{
-			finishedTemp = false;
-			finished = &finishedTemp;
+			sharedFinish = true;
+			(*finished) = sharedFinish;
 		}
 	}
 
