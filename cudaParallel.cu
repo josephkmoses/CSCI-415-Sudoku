@@ -43,7 +43,7 @@ __device__ bool solve(int row, int col, int* puzzle, int counter, int startValue
 	}
 	if(finished)
 	{
-			exit;
+			exit(0);
 	}
 
 	//loop of column and rows
