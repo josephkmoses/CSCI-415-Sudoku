@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <stdlib.h>
-#define NUM_THREADS     5
+#define NUM_THREADS     81
 
 //Puzzles
 int easyPuzzle [81];
@@ -15,6 +15,8 @@ int unsolveable [81];
 int toSolve; //1 =easy; 2= meduim; 3=hard; 4 = evil; 5 = unsolvable
 static bool finished = false;
 static bool found = false;
+
+pthread_mutex_t print_mutex;
 
 bool valueAllowedCheck(int row, int col, int value, int* puzzle);
  void printPuzzle (int* puzzle);
@@ -122,13 +124,22 @@ bool valueAllowedCheck(int row, int col, int value, int* puzzle){
   if(solve(i,j,puzzle,0,startVal)) { //Does this need to be passing a pointer?
            //the puzzle was solved
            if(!found){
-          printf ("Puzzle Solved by %d\n", (int)threadid);
-          found =true;
-          printPuzzle(puzzle);
+             pthread_mutex_lock(&print_mutex);
+             printf ("Puzzle Solved by %d\n", (int)threadid);
+             found =true;
+             printPuzzle(puzzle);
+             pthread_exit(NULL);
+             pthread_mutex_unlock(&print_mutex);
         }
    }
    else {
-            printf( "Not Solved\n");
+            if (!found){
+              pthread_mutex_lock(&print_mutex);
+              printf( "Not Solved\n");
+              found = true;
+              pthread_exit(NULL);
+              pthread_mutex_unlock(&print_mutex);
+            }
    }
 
    //timer end here
@@ -252,7 +263,7 @@ bool valueAllowedCheck(int row, int col, int value, int* puzzle){
     unsolveable[i] = inputUnsolve[i];
     }
 
-    toSolve =3;
+    toSolve =5;
     for(i=0; i< NUM_THREADS; i++){
       rc= pthread_create(&threads[i],NULL,run, (void *)i);
     }
