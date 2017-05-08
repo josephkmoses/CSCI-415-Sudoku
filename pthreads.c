@@ -15,6 +15,7 @@ int unsolveable [81];
 int toSolve; //1 =easy; 2= meduim; 3=hard; 4 = evil; 5 = unsolvable
 static bool finished = false;
 static bool found = false;
+  long long start;
 
 pthread_mutex_t print_mutex;
 
@@ -115,7 +116,7 @@ bool valueAllowedCheck(int row, int col, int value, int* puzzle){
 }
 
  void *run (void *threadid){
-  long long start = start_timer();
+
 
    int i = rand() % 8; //random row  (0-8)
    int j = rand() % 8; //random column  (0-8)
@@ -158,7 +159,8 @@ bool valueAllowedCheck(int row, int col, int value, int* puzzle){
               pthread_mutex_lock(&print_mutex);
               printf( "Not Solved\n");
               found = true;
-
+              printPuzzle(puzzle);
+              long long stop = stop_timer(start, "\nTotal Time: ");
               pthread_exit(NULL);
               pthread_mutex_unlock(&print_mutex);
             }
@@ -285,9 +287,8 @@ bool valueAllowedCheck(int row, int col, int value, int* puzzle){
     unsolveable[i] = inputUnsolve[i];
     }
 
-    clock_t start = clock(), diff;
-
     toSolve =4;
+    start = start_timer();
     for(i=0; i< NUM_THREADS; i++){
       rc= pthread_create(&threads[i],NULL,run, (void *)i);
     }
