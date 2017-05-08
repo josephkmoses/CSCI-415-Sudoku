@@ -293,9 +293,13 @@ int main() {
 	switch(k)
 	{
 		case 1: puzzleToRun = easyPuzzle;
+			break;
 		case 2: puzzleToRun = meduimPuzzle;
+			break;
 		case 3: puzzleToRun = hardPuzzle;
+			break;
 		case 4: puzzleToRun = evilPuzzle;
+			break;
 		case 5: puzzleToRun = unsolveable;
 	}
 	
