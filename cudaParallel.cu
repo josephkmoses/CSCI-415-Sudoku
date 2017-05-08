@@ -284,7 +284,20 @@ int main() {
     unsolveable[i] = inputUnsolve[i];
     }
 
+	int k;
+	cout << "Select a puzzle.\n1 = easy\n2 = medium\n3 = hard\n4 = evil\n5=unsolveable\n";
+	cin >> k;
 	
+	int* puzzleToRun = (int*)malloc(81*sizeof(int));
+	
+	switch(k)
+	{
+		case 1: puzzleToRun = easyPuzzle;
+		case 2: puzzleToRun = meduimPuzzle;
+		case 3: puzzleToRun = hardPuzzle;
+		case 4: puzzleToRun = evilPuzzle;
+		case 5: puzzleToRun = unsolveable;
+	}
 	
 	//host variables
 	bool* h_finished = (bool*)malloc(sizeof(bool));
@@ -308,7 +321,7 @@ int main() {
 	cudaMalloc((void**) &d_result, sizeof(int));
 	checkErrors("cudaMalloc3");
 	
-	cudaMemcpy(d_puzzle, easyPuzzle, 81*sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_puzzle, puzzleToRun, 81*sizeof(int), cudaMemcpyHostToDevice);
 	checkErrors("cudaMemcpy1");
 	cudaMemcpy(d_finished, h_finished, sizeof(bool), cudaMemcpyHostToDevice);
 	checkErrors("cudaMemcpy2");
@@ -320,9 +333,9 @@ int main() {
 	
 	checkErrors("stack size");
 	
-	dim3 threadsPerBlock(9,9);
+	//dim3 threadsPerBlock(9,9); runs really slow...
 	
-	parallelSudoku<<<1 , threadsPerBlock>>>(d_puzzle, d_finished, d_result);
+	parallelSudoku<<<1 , 9>>>(d_puzzle, d_finished, d_result);
 	checkErrors("kernel error");
 	cudaDeviceSynchronize();
 	
