@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <stdlib.h>
-#define NUM_THREADS     81
+#define NUM_THREADS     9
 
 //Puzzles
 int easyPuzzle [81];
@@ -20,6 +20,24 @@ pthread_mutex_t print_mutex;
 
 bool valueAllowedCheck(int row, int col, int value, int* puzzle);
  void printPuzzle (int* puzzle);
+
+
+ long long start_timer() {
+         struct timeval tv;
+         gettimeofday(&tv, NULL);
+         return tv.tv_sec * 1000000 + tv.tv_usec;
+ }
+
+
+ // Prints the time elapsed since the specified time
+ long long stop_timer(long long start_time, char* name) {
+         struct timeval tv;
+         gettimeofday(&tv, NULL);
+         long long end_time = tv.tv_sec * 1000000 + tv.tv_usec;
+         printf("%s",name);
+         printf("%f seconds\n",((float)(end_time - start_time)) / (1000 * 1000));
+         return end_time - start_time;
+ }
 
 bool solve(int row, int col, int* puzzle, int counter, int startValue)
  {
@@ -97,6 +115,8 @@ bool valueAllowedCheck(int row, int col, int value, int* puzzle){
 }
 
  void *run (void *threadid){
+  long long start = start_timer();
+
    int i = rand() % 8; //random row  (0-8)
    int j = rand() % 8; //random column  (0-8)
    int startVal = (int)threadid % 9; //Starting value (1-9) N
@@ -128,6 +148,7 @@ bool valueAllowedCheck(int row, int col, int value, int* puzzle){
              printf ("Puzzle Solved by %d\n", (int)threadid);
              found =true;
              printPuzzle(puzzle);
+             long long stop = stop_timer(start, "\nTotal Time: ");
              pthread_exit(NULL);
              pthread_mutex_unlock(&print_mutex);
         }
@@ -137,6 +158,7 @@ bool valueAllowedCheck(int row, int col, int value, int* puzzle){
               pthread_mutex_lock(&print_mutex);
               printf( "Not Solved\n");
               found = true;
+
               pthread_exit(NULL);
               pthread_mutex_unlock(&print_mutex);
             }
@@ -265,13 +287,10 @@ bool valueAllowedCheck(int row, int col, int value, int* puzzle){
 
     clock_t start = clock(), diff;
 
-    toSolve =5;
+    toSolve =4;
     for(i=0; i< NUM_THREADS; i++){
       rc= pthread_create(&threads[i],NULL,run, (void *)i);
     }
-    diff = clock()-start;
-    int msec = diff * 1000 / CLOCKS_PER_SEC;
-    printf("It took %d mseconds\n", msec);
     pthread_exit(NULL);
 
 
