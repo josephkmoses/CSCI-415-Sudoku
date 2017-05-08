@@ -263,10 +263,15 @@ bool valueAllowedCheck(int row, int col, int value, int* puzzle){
     unsolveable[i] = inputUnsolve[i];
     }
 
+    clock_t start = clock(), diff;
+
     toSolve =5;
     for(i=0; i< NUM_THREADS; i++){
       rc= pthread_create(&threads[i],NULL,run, (void *)i);
     }
+    diff = clock()-start;
+    int msec = diff * 1000 / CLOCKS_PER_SEC;
+    printf("It took %d mseconds\n", msec);
     pthread_exit(NULL);
 
 
