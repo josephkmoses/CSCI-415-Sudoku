@@ -260,7 +260,7 @@ int main() {
                           0,0,0,  0,0,0,  0,3,0,  //row8
                           8,0,0,  0,0,1,  6,0,0 //row9
                       };
-		  int inputEvil2[81]= {0,0,0,  0,5,3,  0,1,2, //row1
+		/*  int inputEvil2[81]= {0,0,0,  0,5,3,  0,1,2, //row1
 							  0,7,0,  0,0,1,  0,8,0, //row2
 							  0,0,0,  2,6,0,  0,0,0,  ///row3
 
@@ -271,7 +271,7 @@ int main() {
 							  0,0,0,  0,9,4,  0,0,0,  //row7
 							  8,5,0,  3,0,0,  0,7,0,  //row8
 							  0,1,0,  8,7,0,  0,0,0 //row9
-						  };
+						  };*/
       int* unsolveable = (int*)malloc(81*sizeof(int));
       int inputUnsolve[81] =   {1,2,3,   4,5,6,  7,8,0,  //row1
                                 0,0,0,  0,0,0,  0,0,2,   //row2
@@ -292,7 +292,7 @@ int main() {
     easyPuzzle[i] = inputEasy[i];
     meduimPuzzle[i] = inputMeduim[i];
     hardPuzzle[i] = inputHard[i];
-    evilPuzzle[i] = inputEvil2[i];
+    evilPuzzle[i] = inputEvil[i];
     unsolveable[i] = inputUnsolve[i];
     }
 
